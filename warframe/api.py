@@ -11,7 +11,7 @@ class Item:
     vaulted: Optional[bool] = None
 
 class WarframeMarketApi:
-    def getItemsList(self, language: str = 'zh-hans') -> List[Item]:
+    def getItemsList(self, language: str = 'zh-hans',timeout:int = 5) -> List[Item]:
         """
         Fetches the list of items from the Warframe Market API.
 
@@ -21,7 +21,6 @@ class WarframeMarketApi:
 
         Parameters:
             language (str): The language to use for the request, defaults to 'zh-hans' (Simplified Chinese).
-            Available language options:
                 - 'en' (English)
                 - 'ru' (Russian)
                 - 'ko' (Korean)
@@ -33,12 +32,13 @@ class WarframeMarketApi:
                 - 'es' (Spanish)
                 - 'it' (Italian)
                 - 'pl' (Polish)
+            timeout (int): The timeout in seconds for the request, defaults to 5 seconds.
 
         Returns:
             List[Item]: A list of Item objects. Returns an empty list if the request fails.
 
         Raises:
-            ValueError: If the provided language is not in the supported languages list.
+            ValueError: If the provided language option is not valid.
         """
         api_url = "https://api.warframe.market/v1/items"
         
@@ -52,19 +52,20 @@ class WarframeMarketApi:
             'Language': language
         }
 
-        response = requests.get(url=api_url, headers=headers)
-        
-        # Check if the request was successful
-        if response.status_code == 200:
-            items_data = response.json()["payload"]["items"]
-            items = [Item(**item) for item in items_data]
-            
-            # Print each Item object's information
-            for item in items:
-                print(item)
-                
-            print(f"Total items fetched: {len(items)}")
-            return items
-        else:
-            print(f"Failed to fetch items list, status code: {response.status_code}")
+        try:
+            response = requests.get(url=api_url, headers=headers, timeout=timeout)
+        except requests.Timeout:
+            print(f"<getItemList> requests timed out after {timeout} seconds.")
             return []
+        except requests.RequestException as e:
+            print(f"<getItemList> has an error occurred: {e}")
+            return []
+        items_data = response.json()["payload"]["items"]
+        items = [Item(**item) for item in items_data]
+        
+        # Print each Item object's information
+        for item in items:
+            print(item)
+            
+        print(f"Total items fetched: {len(items)}")
+        return items

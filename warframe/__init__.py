@@ -1,3 +1,3 @@
-from .api import WarframeMarketApi, Item
+from .api import WarframeMarketApi
 
 __all__ = ["WarframeMarketApi", "Item"]

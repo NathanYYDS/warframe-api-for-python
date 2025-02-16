@@ -1,0 +1,10 @@
+LICENSE
+README.md
+setup.py
+warframe/__init__.py
+warframe/api.py
+warframe.egg-info/PKG-INFO
+warframe.egg-info/SOURCES.txt
+warframe.egg-info/dependency_links.txt
+warframe.egg-info/requires.txt
+warframe.egg-info/top_level.txt
