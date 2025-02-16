@@ -5,7 +5,7 @@ setup(
     name="warframe",
     version="0.1.0", 
     author="NathanYYDS", 
-    author_email="zgc2200394635@gmail.com",
+    author_email="2200394635@qq.com",
     description="Warframe API package of Python",
     packages=find_packages(), 
     install_requires=["requests"],
