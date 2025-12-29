@@ -45,6 +45,7 @@ class User:
     status: str
     region: str
     reputation: int
+    platform: Optional[str] = None
     avatar: Optional[str] = None
     last_seen: Optional[str] = None
 
@@ -54,8 +55,9 @@ class User:
             id=data.get('id'),
             ingame_name=data.get('ingame_name') or data.get('ingameName'),
             status=data.get('status'),
-            region=data.get('region'),
+            region=data.get('region') or data.get('locale'),
             reputation=data.get('reputation'),
+            platform=data.get('platform'),
             avatar=data.get('avatar'),
             last_seen=data.get('last_seen') or data.get('lastSeen')
         )
@@ -79,18 +81,27 @@ class Order:
         user_data = data.get('user')
         user = User.from_dict(user_data) if user_data else None
         
+        # Try to get platform/region from order data, fallback to user data
+        platform = data.get('platform')
+        if not platform and user:
+            platform = user.platform
+            
+        region = data.get('region')
+        if not region and user:
+            region = user.region
+
         return cls(
             id=data.get('id'),
-            creation_date=data.get('creation_date') or data.get('creationDate'),
+            creation_date=data.get('creation_date') or data.get('creationDate') or data.get('createdAt'),
             visible=data.get('visible'),
             quantity=data.get('quantity'),
             user=user,
-            last_update=data.get('last_update') or data.get('lastUpdate'),
+            last_update=data.get('last_update') or data.get('lastUpdate') or data.get('updatedAt'),
             platinum=data.get('platinum'),
             order_type=data.get('order_type') or data.get('orderType') or data.get('type'),
-            region=data.get('region'),
-            platform=data.get('platform'),
-            mod_rank=data.get('mod_rank') or data.get('modRank')
+            region=region,
+            platform=platform,
+            mod_rank=data.get('mod_rank') or data.get('modRank') or data.get('rank')
         )
 
 @dataclass
