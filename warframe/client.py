@@ -63,11 +63,11 @@ class WarframeMarketClient:
     def clear_token(self):
         self._token = None
 
-    async def _request(self, method: str, endpoint: str, **kwargs) -> Dict[str, Any]:
+    async def _request(self, method: str, endpoint: str, base_url: Optional[str] = None, **kwargs) -> Dict[str, Any]:
         if not self._session:
             await self.open()
         
-        url = f"{self.BASE_URL}{endpoint}"
+        url = f"{base_url or self.BASE_URL}{endpoint}"
         async with self._rate_lock:
             now = asyncio.get_event_loop().time()
             wait = max(0.0, self._next_available_time - now)
@@ -140,7 +140,7 @@ class WarframeMarketClient:
     async def get_statistics(self, item_url_name: str) -> Dict[str, Any]:
         """Get statistics for an item"""
         safe_name = quote(item_url_name, safe="")
-        data = await self._request("GET", f"/items/{safe_name}/statistics")
+        data = await self._request("GET", f"/items/{safe_name}/statistics", base_url="https://api.warframe.market/v1")
         return data.get("statistics_closed", {})
     
     async def get_most_recent_orders(self) -> List[Order]:

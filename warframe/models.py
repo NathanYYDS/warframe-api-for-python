@@ -8,6 +8,8 @@ class ItemShort:
     item_name: str
     thumb: str
     vaulted: Optional[bool] = None
+    # Add a new field to store all localized names
+    all_names: Dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], preferred_lang: Optional[str] = None) -> 'ItemShort':
@@ -18,6 +20,7 @@ class ItemShort:
         
         # Extract info from i18n if available, defaulting to 'en' or first available
         i18n = data.get('i18n', {})
+        all_names = {}
         if i18n:
             lang_data = None
             if preferred_lang and preferred_lang in i18n:
@@ -26,6 +29,11 @@ class ItemShort:
                 lang_data = i18n.get('en') or next(iter(i18n.values()), {})
             item_name = lang_data.get('name')
             thumb = lang_data.get('thumb')
+            
+            # Populate all_names
+            for lang, details in i18n.items():
+                if name := details.get('name'):
+                    all_names[lang] = name
         else:
             item_name = data.get('item_name') or data.get('itemName')
             thumb = data.get('thumb')
@@ -35,7 +43,8 @@ class ItemShort:
             url_name=url_name,
             item_name=item_name,
             thumb=thumb,
-            vaulted=data.get('vaulted')
+            vaulted=data.get('vaulted'),
+            all_names=all_names
         )
 
 @dataclass

@@ -111,7 +111,13 @@ The client supports the following main operations:
 
 ## Version
 
-0.2.1
+0.3.0
+
+### Update Log (0.3.0)
+- Added `ItemMatcher` class for fuzzy matching and alias support.
+- Implemented user-defined alias system (supports chained aliases and substring replacement).
+- Enhanced normalization logic for item names (handles Chinese interpunct "·").
+- Refactored matching logic to be reusable and robust.
 
 ## License
 
