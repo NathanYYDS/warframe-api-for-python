@@ -152,3 +152,85 @@ class NPC:
             name=data.get('name'),
             thumb=data.get('thumb')
         )
+
+@dataclass
+class Riven:
+    """Riven weapon model"""
+    id: str
+    slug: str
+    game_ref: str
+    group: str
+    riven_type: str
+    disposition: float
+    req_mastery_rank: int
+    item_name: str
+    wiki_link: Optional[str] = None
+    icon: Optional[str] = None
+    thumb: Optional[str] = None
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'Riven':
+        # Extract name from i18n
+        i18n = data.get('i18n', {})
+        item_name = ""
+        if i18n:
+            lang_data = i18n.get('en') or next(iter(i18n.values()), {})
+            item_name = lang_data.get('name', '')
+        
+        return cls(
+            id=data.get('id'),
+            slug=data.get('slug'),
+            game_ref=data.get('gameRef'),
+            group=data.get('group'),
+            riven_type=data.get('rivenType'),
+            disposition=data.get('disposition'),
+            req_mastery_rank=data.get('reqMasteryRank'),
+            item_name=item_name,
+            wiki_link=data.get('i18n', {}).get('en', {}).get('wikiLink'),
+            icon=data.get('i18n', {}).get('en', {}).get('icon'),
+            thumb=data.get('i18n', {}).get('en', {}).get('thumb')
+        )
+
+@dataclass
+class RivenAttribute:
+    """Riven attribute model"""
+    id: str
+    slug: str
+    game_ref: str
+    group: str
+    prefix: str
+    suffix: str
+    exclusive_to: List[str]
+    positive_is_negative: bool
+    positive_only: bool
+    negative_only: bool
+    unit: str
+    item_name: str
+    icon: Optional[str] = None
+    thumb: Optional[str] = None
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'RivenAttribute':
+        # Extract name from i18n
+        i18n = data.get('i18n', {})
+        item_name = ""
+        if i18n:
+            lang_data = i18n.get('en') or next(iter(i18n.values()), {})
+            item_name = lang_data.get('name', '')
+        
+        return cls(
+            id=data.get('id'),
+            slug=data.get('slug'),
+            game_ref=data.get('gameRef'),
+            group=data.get('group'),
+            prefix=data.get('prefix'),
+            suffix=data.get('suffix'),
+            exclusive_to=data.get('exclusiveTo', []),
+            positive_is_negative=data.get('positiveIsNegative'),
+            positive_only=data.get('positiveOnly'),
+            negative_only=data.get('negativeOnly'),
+            unit=data.get('unit'),
+            item_name=item_name,
+            icon=data.get('i18n', {}).get('en', {}).get('icon'),
+            thumb=data.get('i18n', {}).get('en', {}).get('thumb')
+        )

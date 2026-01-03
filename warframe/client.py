@@ -4,7 +4,7 @@ from typing import List, Optional, Dict, Any, Union
 import aiohttp
 import json
 from urllib.parse import quote
-from .models import ItemShort, Order, User, Mission, NPC
+from .models import ItemShort, Order, User, Mission, NPC, Riven, RivenAttribute
 from .exceptions import APIRequestError, TimeoutError, InvalidParameterError
 
 logger = logging.getLogger(__name__)
@@ -197,5 +197,23 @@ class WarframeMarketClient:
             sell_sorted = sorted(sell, key=lambda o: o.platinum)[:5]
             return {"buy": buy_sorted, "sell": sell_sorted}
     # Helper to resolve image urls
+    async def get_riven_weapons(self) -> List[Riven]:
+        """Get list of all tradable riven items"""
+        data = await self._request("GET", "/riven/weapons")
+        riven_data = data if isinstance(data, list) else data.get("riven", [])
+        return [Riven.from_dict(r) for r in riven_data]
+    
+    async def get_riven_weapon(self, slug: str) -> Riven:
+        """Get full info about one, particular riven item"""
+        safe_slug = quote(slug, safe="")
+        data = await self._request("GET", f"/riven/weapon/{safe_slug}")
+        return Riven.from_dict(data)
+    
+    async def get_riven_attributes(self) -> List[RivenAttribute]:
+        """Get list of all attributes for riven weapons"""
+        data = await self._request("GET", "/riven/attributes")
+        attributes_data = data if isinstance(data, list) else data.get("attributes", [])
+        return [RivenAttribute.from_dict(a) for a in attributes_data]
+
     def get_asset_url(self, path: str) -> str:
         return f"{self.ASSETS_BASE_URL}/{path}"

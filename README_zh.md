@@ -203,6 +203,9 @@ async def websocket_example():
 | `get_missions()` | 无 | 获取所有活跃任务列表 |
 | `get_npcs()` | 无 | 获取所有 NPC 列表 |
 | `get_most_recent_orders()` | 无 | 获取最近发布的订单流 |
+| `get_riven_weapons()` | 无 | 获取所有可交易的 Riven 武器列表 |
+| `get_riven_weapon(slug)` | `slug` (str) | 获取特定 Riven 武器的详细信息 |
+| `get_riven_attributes()` | 无 | 获取所有 Riven 武器属性列表 |
 | `get_asset_url(path)` | `path` (str) | 获取资产 URL |
 
 ### 模型

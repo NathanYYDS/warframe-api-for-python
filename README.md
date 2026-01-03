@@ -205,6 +205,9 @@ async def websocket_example():
 | `get_missions()` | None | Get list of active missions |
 | `get_npcs()` | None | Get list of NPCs |
 | `get_most_recent_orders()` | None | Get recent orders stream |
+| `get_riven_weapons()` | None | Get list of all tradable riven items |
+| `get_riven_weapon(slug)` | `slug` (str) | Get full info about one riven item |
+| `get_riven_attributes()` | None | Get list of all attributes for riven weapons |
 | `get_asset_url(path)` | `path` (str) | Get asset URL for images |
 
 ### Models
